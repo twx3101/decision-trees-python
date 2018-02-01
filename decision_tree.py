@@ -20,14 +20,14 @@ def loadExamples(input_array, emotion_number):
 #def bestAttribute():
 
 
-def gain(examples, attribute):
-    # NEED TO EXTRACT COLUMN FOR ATTRIBUTE FROM MATRIX
+def gain(examples, attribute_matrix, attribute_no):
+    """Calculates the gain for attribute_no"""
     p = count_values(examples, 1)
     n = count_values(examples, 0)
-    p0 = count_attribute_values(examples, 1, attribute, 0)
-    n0 = count_attribute_values(examples, 0, attribute, 0)
-    p1 = count_attribute_values(examples, 1, attribute, 1)
-    n1 = count_attribute_values(examples, 0, attribute, 1)
+    p0 = count_attribute_values(examples, 1, attribute_matrix, attribute_no, 0)
+    n0 = count_attribute_values(examples, 0, attribute_matrix, attribute_no, 0)
+    p1 = count_attribute_values(examples, 1, attribute_matrix, attribute_no, 1)
+    n1 = count_attribute_values(examples, 0, attribute_matrix, attribute_no, 1)
     return funcI(p, n) - remainder(p, n, p0, n0, p1, n1)
 
 
@@ -40,12 +40,12 @@ def count_values(attribute, value):
     return count
 
 
-def count_attribute_values(examples, e_value, attribute, a_value):
-    """returns the number of elements in array 'example' with value 'e_value' where the corresponding value in array 'attribute' is equal to 'a_value'"""
+def count_attribute_values(examples, e_value, attribute, col, a_value):
+    """returns the number of elements in array 'example' with value 'e_value' where the corresponding value in column 'col' of array 'attribute' is equal to 'a_value'"""
     count = 0
     i = 0
     while i < examples.size:
-        if examples[i] == e_value and attribute[i] == a_value:
+        if examples[i] == e_value and np.hsplit(attribute, 45)[col][i] == a_value:
             count += 1
         i += 1
     return count
@@ -74,6 +74,8 @@ def remainder(p, n, p0, n0, p1, n1):
 
 #class tree:
 
+attributes = mat['x']
+
 examples = mat['y']
 examples1 = loadExamples(examples, 1) # +ve and -ve examples for emotion 1
 examples2 = loadExamples(examples, 2) # +ve and -ve examples for emotion 2
@@ -85,3 +87,8 @@ examples6 = loadExamples(examples, 6) # +ve and -ve examples for emotion 6
 p = count_values(examples1, 1)
 n = count_values(examples1, 0)
 print funcI(p, n)
+
+print count_values(examples1, 1)
+print count_values(examples1, 0)
+
+print gain(examples1, attributes, 1)
