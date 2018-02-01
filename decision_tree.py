@@ -72,7 +72,16 @@ def remainder(p, n, p0, n0, p1, n1):
 #def decisionTree():
 
 
-#class tree:
+class tree:
+    """Tree class"""
+    op        # label of which attribute is root
+    kids = [] # numpy object array
+    type      # we can't use class, it's a keyword!
+    def __init__(self, attribute):
+        self.op = attribute
+
+
+
 
 attributes = mat['x']
 
