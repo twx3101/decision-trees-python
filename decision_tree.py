@@ -87,18 +87,15 @@ def remainder(p, n, p0, n0, p1, n1):
 
 #def decisionTree():
 
-'''
 class tree:
-    """Tree class"""
-    op          # label of which attribute is root
-    kids = []   # numpy object array
-    type = none # we can't use class, it's a keyword! -1 = empty
+    op = 0
+    kids = []
+    leaf = None
     def __init__(self, attribute):
         self.op = attribute
-    def addKids(kid1, kid2):
-        kids = [kid1, kid2]
-
-'''
+    def addKids(self, kid1, kid2):
+        self.kids.append(kid1)
+        self.kids.append(kid2)
 
 
 attributes = mat['x']
