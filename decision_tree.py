@@ -88,12 +88,13 @@ def remainder(p, n, p0, n0, p1, n1):
 #def decisionTree():
 
 class tree:
-    op = 0
-    kids = []
-    leaf = None
+    op = 0 #attribute number for root
+    kids = [] #subtreees
+    leaf = None #value is 1 or 0 if leaf node, otherwise None
     def __init__(self, attribute):
         self.op = attribute
     def addKids(self, kid1, kid2):
+        """add two subtrees to the tree"""
         self.kids.append(kid1)
         self.kids.append(kid2)
 
