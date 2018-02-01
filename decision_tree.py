@@ -86,11 +86,13 @@ def remainder(p, n, p0, n0, p1, n1):
 '''
 class tree:
     """Tree class"""
-    op        # label of which attribute is root
-    kids = [] # numpy object array
-    type      # we can't use class, it's a keyword!
+    op          # label of which attribute is root
+    kids = []   # numpy object array
+    type = none # we can't use class, it's a keyword! -1 = empty
     def __init__(self, attribute):
         self.op = attribute
+    def addKids(kid1, kid2):
+        kids = [kid1, kid2]
 
 '''
 
