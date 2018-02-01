@@ -1,6 +1,8 @@
 import scipy.io
 import numpy as np
 
+from scipy import stats
+
 mat = scipy.io.loadmat('Data/cleandata_students.mat')
 
 def loadExamples(input_array, emotion_number):
@@ -14,7 +16,17 @@ def loadExamples(input_array, emotion_number):
     return output_array
 
 
-#def majorityValue():
+def majorityValue(binary_targets):
+    p = count_values(binary_targets, 1)
+    n = count_values(binary_targets, 0)
+    
+    if p > n:
+        return 1
+    else:
+        return 0
+    
+    
+
     
 
 #def bestAttribute():
@@ -71,7 +83,7 @@ def remainder(p, n, p0, n0, p1, n1):
 
 #def decisionTree():
 
-
+'''
 class tree:
     """Tree class"""
     op        # label of which attribute is root
@@ -80,7 +92,7 @@ class tree:
     def __init__(self, attribute):
         self.op = attribute
 
-
+'''
 
 
 attributes = mat['x']
@@ -95,9 +107,11 @@ examples6 = loadExamples(examples, 6) # +ve and -ve examples for emotion 6
 
 p = count_values(examples1, 1)
 n = count_values(examples1, 0)
-print funcI(p, n)
+print(funcI(p, n))
 
-print count_values(examples1, 1)
-print count_values(examples1, 0)
+print(count_values(examples1, 1))
+print(count_values(examples1, 0))
 
-print gain(examples1, attributes, 1)
+print(gain(examples1, attributes, 1))
+
+print(majorityValue(examples))
