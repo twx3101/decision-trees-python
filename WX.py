@@ -86,12 +86,14 @@ def remainder(p, n, p0, n0, p1, n1):
     i1 = funcI(p1, n1)
     return (a * i0) + (b * i1)
 
-# def split(examples, best_attribute, value):
-#     count = 0
-#     a = []
-#     for i in range(len(examples)):
-#         if examples[best_attribute][i] == value:
-#             a[count] = examples
+ def split(examples, best_attribute, binary_targets, value):
+     a = []
+     b = []
+     for i in range(len(examples)):
+         if examples[i][best_attribute] == value:
+             a.append(examples)
+             b.append(binary_targets[i])
+    return a, b
 
 
 
@@ -107,16 +109,19 @@ def decisionTree(examples, attributes, binary_targets):
         x.addLeaf(majorityValue(binary_targets))
         return x
     else:
-        best_attribute = bestAttribute(examples, attributes, binary targets)
+        best_attribute = bestAttribute(examples, attributes, binary_targets)
         x.addRoot(best_attribute)
         for i in range(2):
             y = tree()
             x.addKids(y)
-            subset_examples = split(examples, best_attribute, i)
+            subset_examples, subset_binary = split(examples, best_attribute, binary_targets, i)
             if len(subset_examples) == 0:
             y.addLeaf(majorityValue(subset_binary))
 
-            else y.addKids(decisionTree(subset_examples, attribute without best, subset_binary))
+            else:
+                subset_attribute = attribute
+                del subset_attribute[best_attribute]
+                y.addKids(decisionTree(subset_examples, subset_attribute, subset_binary))
     return x
 
 class tree:
@@ -138,15 +143,15 @@ class tree:
         self.leaf = value
 
 
-attributes = mat['x']
+examples = mat['x']
 
-examples = mat['y']
-examples1 = loadExamples(examples, 1) # +ve and -ve examples for emotion 1
-examples2 = loadExamples(examples, 2) # +ve and -ve examples for emotion 2
-examples3 = loadExamples(examples, 3) # +ve and -ve examples for emotion 3
-examples4 = loadExamples(examples, 4) # +ve and -ve examples for emotion 4
-examples5 = loadExamples(examples, 5) # +ve and -ve examples for emotion 5
-examples6 = loadExamples(examples, 6) # +ve and -ve examples for emotion 6
+emotion = mat['y']
+emotion1 = loadExamples(examples, 1) # +ve and -ve examples for emotion 1
+emotion2 = loadExamples(examples, 2) # +ve and -ve examples for emotion 2
+emotion3 = loadExamples(examples, 3) # +ve and -ve examples for emotion 3
+emotion4 = loadExamples(examples, 4) # +ve and -ve examples for emotion 4
+emotion5 = loadExamples(examples, 5) # +ve and -ve examples for emotion 5
+emotion6 = loadExamples(examples, 6) # +ve and -ve examples for emotion 6
 
 p = count_values(examples1, 1)
 n = count_values(examples1, 0)
