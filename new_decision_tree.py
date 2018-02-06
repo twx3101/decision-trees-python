@@ -258,16 +258,45 @@ def split10Fold(data, time):
     print(start)
     print(end)
 
-
     for i in range(0, num_of_data):
         if(i < end and i >= start):
             one_fold_data.append(data[i])
         else:
             nine_folds_data.append(data[i])
 
-
-
     return np.asarray(one_fold_data), np.asanyarray(nine_folds_data)
+
+def matrix2array(matrix):
+    """takes a matrix of 1s and zeros and outputs an array containing the indexof the column that contains a 1"""
+    
+    matrix_shape = matrix.shape
+    no_of_rows = matrix_shape[0]
+    return_array = np.zeros((no_of_rows,1))
+    
+    for row in matrix:
+        for i in row.size():
+            if row[i] == 1:
+                return_array[row] = i + 1
+
+    return return_array
+                
+
+
+def confusionMatrix(T, x2, binary_targets, no_of_classes):
+    """Generates and outputs a confusion matrix"""
+    
+    confusion_matrix = np.zeros((no_of_classes,no_of_classes))
+
+    prediction_matrix = testTrees(T, x2)
+    prediction_array = matrix2array(prediction_matrix)
+
+    for i in range(no_of_classes):
+        for j in range(no_of_classes):
+            for k in range(binary_targets.size()):
+                if binary_targets[k] == j and prediction_array[k] == i:
+                    confusion_matrix[i][j] += 1
+    
+    return confusion_matrix
 
 
 data = scipy.io.loadmat("Data/cleandata_students.mat")
