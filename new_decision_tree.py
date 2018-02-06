@@ -102,7 +102,7 @@ def chooseBestAttr(data_merge,attr_header,binary_targets):
         if col_attr not in attr_header:
             continue
         attr_gain = gain(data_merge,col_attr,binary_targets)
-        print('col attr1: ',col_attr, " : values1 = ",attr_gain)
+        #print('col attr1: ',col_attr, " : values1 = ",attr_gain)
 
         if attr_gain > max_gain:
             max_gain = attr_gain
@@ -176,7 +176,7 @@ def decisionTree(examples, attributes, binary_targets):
         for i in range(2):
 
             subset_examples, subset_binary = getDataSample(examples, best_attribute, binary_targets, i)
-            print(subset_examples)
+            #print(subset_examples)
 
             if len(subset_examples) == 0:
                 y = tree()
@@ -207,12 +207,13 @@ class tree:
 
     def printtree(self):
         if(self.op is not None):
-            print("Root", self.op)
-        if(len(self.kids)) != 0:
             for i in range(len(self.kids)):
-                self.kids[i].printtree()
-        if(self.leaf is not None):
-            print("leaf" , self.leaf)
+                print("Root", self.op, i,)
+                if(self.kids[i]) is not None:
+                    (self.kids[i].printtree())
+        elif(self.leaf is not None):
+            print("leaf" , self.leaf,)
+
 
 data = scipy.io.loadmat("Data/cleandata_students.mat")
 
@@ -227,9 +228,15 @@ for row in range(data_x.shape[1]):
 example_1 = chooseEmotion(data_y,1)
 data_merge1 = merge(data_x, example_1)
 example_2 = chooseEmotion(data_y,2)
-data_merge2 = merge(data_x, example_2)
+
 example_3 = chooseEmotion(data_y,3)
-data_merge3 = merge(data_x, example_3)
+
+example_4 = chooseEmotion(data_y,4)
+
+example_5 = chooseEmotion(data_y,5)
+
+example_6 = chooseEmotion(data_y,6)
+
 
 attr_header = []
 for i in range(len(data_merge1[0])):
