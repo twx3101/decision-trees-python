@@ -10,9 +10,9 @@ def chooseEmotion(example, emotion):
     result_array =  []
     for element in example:
         if element == emotion:
-            result_array.append([1])
+            result_array.append(1)
         else:
-            result_array.append([0])
+            result_array.append(0)
     return np.asarray(result_array)
 
 def count(column, target):
@@ -214,6 +214,60 @@ class tree:
         elif(self.leaf is not None):
             print("leaf" , self.leaf,)
 
+def getResult(attributes, tree)
+    if (tree.op == None):
+        return tree.leaf
+
+    if (attributes[tree.op] == 0):
+        return(getResult(attributes, tree.kids[0]))
+    else
+        return(getResult(attributes, tree.kids[1]))
+
+
+def testTrees(T, x2):
+
+    predictions = np.zeros(x2.size, 6)
+    predicted = []
+
+
+    for i in range(x2.size):
+        for j in range(len(T)):
+            predicted.append(getResult(x2[i]), T[j])
+        predictions[i] = predicted
+
+    return np.asarray(predictions)
+
+
+def split10Fold(data, time):
+    one_fold_data = []
+    nine_folds_data = []
+
+    array = np.array(data)
+    num_of_data = array.shape[0]
+    one_fold = num_of_data // 10
+    nine_fold = num_of_data - one_fold
+
+   ## print(one_fold)
+   ## print(nine_fold)
+
+    start = (time - 1) * one_fold
+
+    end = start + one_fold
+
+    print(start)
+    print(end)
+
+
+    for i in range(0, num_of_data):
+        if(i < end and i >= start):
+            one_fold_data.append(data[i])
+        else:
+            nine_folds_data.append(data[i])
+
+
+
+    return np.asarray(one_fold_data), np.asanyarray(nine_folds_data)
+
 
 data = scipy.io.loadmat("Data/cleandata_students.mat")
 
@@ -237,6 +291,9 @@ example_5 = chooseEmotion(data_y,5)
 
 example_6 = chooseEmotion(data_y,6)
 
+
+(test_data, training_data) = split10Fold(data_x, 3)
+(binary_test, binary_training) = split10Fold(example_1, 3)
 
 attr_header = []
 for i in range(len(data_merge1[0])):
