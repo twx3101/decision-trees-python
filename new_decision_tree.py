@@ -325,6 +325,11 @@ def precisionRate(confusion_matrix, class_number):
     return float(true_positives)/total_predicted
 
 
+def f1(precision, recall):
+    """calculates and returns the f1 measure using the precision and recall"""
+    return (2 * float((precision * recall))/(precision + recall))
+
+
 data = scipy.io.loadmat("Data/cleandata_students.mat")
 
 array_data = np.array(data)
