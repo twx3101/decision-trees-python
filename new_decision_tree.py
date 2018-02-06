@@ -299,6 +299,32 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
     return confusion_matrix
 
 
+
+def averageRecall(confusion_matrix, class_number):
+    """returns average recall for the class"""
+    
+    total_actual = 0
+    for row in confusion_matrix:
+        total_actual += row[class_number - 1]
+
+    true_positives = confusion_matrix[class_number - 1][class_number - 1]
+    
+    return float(true_positives)/total_actual
+
+
+
+def precisionRate(confusion_matrix, class_number):
+    """returns precision rate for the class"""
+    
+    total_predicted = 0
+    for i in confusion_matrix[class_number - 1]:
+        total_predicted += i
+    
+    true_positives = confusion_matrix[class_number - 1][class_number - 1]
+    
+    return float(true_positives)/total_predicted
+
+
 data = scipy.io.loadmat("Data/cleandata_students.mat")
 
 array_data = np.array(data)
