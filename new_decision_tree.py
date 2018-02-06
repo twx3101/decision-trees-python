@@ -293,7 +293,7 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
     for i in range(no_of_classes):
         for j in range(no_of_classes):
             for k in range(binary_targets.size()):
-                if binary_targets[k] == j and prediction_array[k] == i:
+                if binary_targets[k] == j+1 and prediction_array[k] == i+1:
                     confusion_matrix[i][j] += 1
     
     return confusion_matrix
