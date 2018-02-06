@@ -274,7 +274,7 @@ def matrix2array(matrix):
     return_array = np.zeros((no_of_rows,1))
     
     for row in matrix:
-        for i in row.size():
+        for i in range(row.size()):
             if row[i] == 1:
                 return_array[row] = i + 1
 
@@ -330,28 +330,31 @@ def f1(precision, recall):
     return (2 * float((precision * recall))/(precision + recall))
 
 
-def classificationError(confusion_matrix, class_number):
-    """calculates and returns the classification error (proportion of errors) for one class"""
-    correct = confusion_matrix[0][class_number]
-    errors = 0
-    rows = confusion_matrix.shape[0]
-    for i in range(1, rows):
-        errors += confusion_matrix[i][class_number]
-    total = correct + errors
-    return float(errors) / total
-
-
-def classificationRate(confusion_matrix, class_number):
+def classificationRate(T, x2, binary_targets, class_number):
     """calculates and return the classification rate for one class."""
-    return 1 - classificationError(confusion_matrix, class_number)
+    
+    true_positives = 0
+    false_positives = 0
+    true_negatives = 0
+    false_negatives = 0
+    
+    prediction_matrix = testTrees(T, x2)
 
+    for i in range(binary_targets.size()):
+        if prediction_matrix[i][class_number - 1] == 1:
+            if binary_targets[i] == class_number:
+                true_positives += 1
+            else:
+                false_positives += 1
+        else:
+            if binary_targets[i] == class_number:
+                false_negatives += 1
+            else:
+                true_negatives += 1
 
-def avClassificationRate(confusion_matrix, no_of_classes):
-    """calculates the average classification rate for all classes"""
-    total = 0
-    for i in range(no_of_classes):
-        total += classificationRate(confusion_matrix, i)
-    return float(total) / no_of_classes
+    total_true = true_positives + true_negatives
+    total = total_true + false_positives + false_negatives
+    return float(total_true) / total
 
 
 data = scipy.io.loadmat("Data/cleandata_students.mat")
