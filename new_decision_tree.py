@@ -5,15 +5,6 @@ import math
 
 INDEX_LAST_ELEMENT = -1
 
-data = scipy.io.loadmat("cleandata_students.mat")
-
-array_data = np.array(data)
-data_x = np.array(data['x'])
-data_y = np.array(data['y'])
-
-attribute_tracker = []
-for row in range(data_x.shape[1]):
-    attribute_tracker.append(1)
 
 def chooseEmotion(example, emotion):
     result_array =  []
@@ -119,19 +110,6 @@ def chooseBestAttr(data_merge,attr_header,binary_targets):
 
     return col_best_attr
 
-#if there is no attr, return majority of value in emotion example
-# def getMajorityValue(data_merge):
-#     num_zero = 0
-#     num_one = 0
-#     for row in data_merge:
-#         if row[INDEX_LAST_ELEMENT] == 1:
-#             num_one += 1
-#         else:
-#             num_zero += 1
-#     if num_one > num_zero:
-#         return 1
-#     else:
-#         return 0
 
 def majorityValue(binary_targets):
     p = count(binary_targets, 1)
@@ -158,14 +136,6 @@ def getType(data_merge,col_best_attr):
             array_element.append(row[col_best_attr])
     return array_element
 
-# get combination array according to different value in attr col
-# split tree
-# def getDataSample(data_merge, col_best_attr, val):
-#     array_row = []
-#     for row in data_merge:
-#         if row[col_best_attr] == val:
-#             array_row.append(row)
-#     return np.asarray(array_row)
 
 def getDataSample(data_merge, col_best_attr, binary_targets, val):
     array_row = []
@@ -187,36 +157,6 @@ def isSameSample(data_merge):
         if not np.array_equal(temp_data_merge,row):
             return False
     return True
-
-def initiateDecisionTree(data_merge,attr_header):
-
-    data_merge = data_merge[:]
-    majority = getMajorityValue(data_merge)
-
-    if isSameSample(data_merge):
-        return data_merge[0][INDEX_LAST_ELEMENT]
-    elif data_merge.size == 0:
-        return majority
-    elif hasSameValueEmotion(data_merge):
-        return data_merge[0][INDEX_LAST_ELEMENT]
-    else:
-        col_best_attr = chooseBestAttr(data_merge,attr_header)
-        print("COLUMN BEST ATTR : ", col_best_attr , " ~~~~~~~~~~~~~~~~~~~~~~")
-        tree = {col_best_attr : {}}
-        array_attr_element = getType(data_merge,col_best_attr)
-
-        for element in array_attr_element:
-            new_data_merge = getDataSample(data_merge, col_best_attr, element)
-            new_attr = attr_header[:]
-            print("new_attr: ", new_attr )
-            print("Length new_attr : ",len(new_attr))
-            print("Data_merge : ",data_merge)
-            new_attr.remove(col_best_attr)
-            print("After new_attr: ", new_attr)
-            print('\n')
-            subtree = initiateDecisionTree(new_data_merge,new_attr)
-            tree[col_best_attr][element] = subtree
-    return tree
 
 def decisionTree(examples, attributes, binary_targets):
     x = tree()
@@ -249,30 +189,41 @@ def decisionTree(examples, attributes, binary_targets):
     return x
 
 class tree:
-        # self.op = attribute #attribute number for root
-        # kids = [] #subtreees
-        # leaf = None #value is 1 or 0 if leaf node, otherwise None
-        #if put here, these are defined as class attributes and not as instance attributes
     def __init__(self):
         self.op = None #attribute number for root
         self.kids = [] #subtreees
         self.leaf = None #value is 1 or 0 if leaf node, otherwise None
+
     def addRoot(self, attribute):
         #add root node to tree, empty for leaf node
         self.op = attribute
+
     def addKids(self, kid):
         """add subtrees to the tree"""
         self.kids.append(kid)
+
     def addLeaf(self, value):
         self.leaf = value
+
     def printtree(self):
-        if(self.op != None):
+        if(self.op is not None):
             print("Root", self.op)
         if(len(self.kids)) != 0:
             for i in range(len(self.kids)):
                 self.kids[i].printtree()
-        if(self.leaf != None):
+        if(self.leaf is not None):
             print("leaf" , self.leaf)
+
+data = scipy.io.loadmat("Data/cleandata_students.mat")
+
+array_data = np.array(data)
+data_x = np.array(data['x'])
+data_y = np.array(data['y'])
+
+attribute_tracker = []
+for row in range(data_x.shape[1]):
+    attribute_tracker.append(1)
+
 example_1 = chooseEmotion(data_y,1)
 data_merge1 = merge(data_x, example_1)
 example_2 = chooseEmotion(data_y,2)
@@ -280,15 +231,8 @@ data_merge2 = merge(data_x, example_2)
 example_3 = chooseEmotion(data_y,3)
 data_merge3 = merge(data_x, example_3)
 
-# attr_header created for tracking attr that is already used
 attr_header = []
 for i in range(len(data_merge1[0])):
     attr_header.append(i)
 x = decisionTree(data_x, attr_header, example_1)
 x.printtree()
-#print(attr_header)
-#print(initiateDecisionTree(data_merge1,attr_header))
-
-
-# {23: {0: {6: {0: {3: {1: {43: {0: {24: {1: 0, 0: {44: {0: {32: {0: {38: {0: {22: {0: 0, 1: {4: {0: 0, 1: 1}}}}, 1: {18: {0: 1, 1: 0}}}}, 1: {7: {0: 0, 1: 1}}}}, 1: 0}}}}, 1: {16: {1: {35: {0: {4: {0: 0, 1: {13: {0: 1, 1: 0}}}}, 1: 1}}, 0: 0}}}}, 0: {30: {0: 0, 1: {43: {0: 0, 1: {29: {1: 1, 0: 0}}}}}}}}, 1: {3: {1: {16: {0: {15: {0: {29: {0: 0, 1: {5: {0: 0, 1: 1}}}}, 1: {0: {1: {1: {0: {4: {0: {14: {0: 1, 1: 0}}, 1: 0}}, 1: 0}}, 0: 1}}}}, 1: {12: {0: {7: {0: {0: {0: 1, 1: {19: {1: 0, 0: 1}}}}, 1: 0}}, 1: 0}}}}, 0: {15: {0: {11: {1: 0, 0: {1: {0: {19: {0: {12: {0: {16: {1: 0, 0: {37: {0: {39: {0: 0, 1: 1}}, 1: 1}}}}, 1: {33: {0: 1, 1: 0}}}}, 1: 0}}, 1: 0}}}}, 1: {0: {0: 1, 1: 0}}}}}}}}, 1: {3: {0: {16: {0: 0, 1: {22: {1: {27: {0: {17: {0: 0, 1: 1}}, 1: 1}}, 0: {8: {0: {11: {1: 0, 0: {24: {0: {32: {0: {38: {0: {12: {0: 1, 1: {0: {0: {6: {0: 0, 1: 1}}, 1: 1}}}}, 1: 0}}, 1: 0}}, 1: 0}}}}, 1: 0}}}}}}, 1: {14: {1: {8: {1: 0, 0: {11: {0: {25: {0: {28: {0: 1, 1: 0}}, 1: 0}}, 1: 0}}}}, 0: {8:
-#{0: {39: {0: {35: {0: 1, 1: {38: {0: 1, 1: 0}}}}, 1: {24: {1: {21: {0: 0, 1: 1}}, 0: 1}}}}, 1: {43: {1: 0, 0: {13: {0: 1, 1: {26: {0: 0, 1: 1}}}}}}}}}}}}}}
