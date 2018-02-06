@@ -214,26 +214,27 @@ class tree:
         elif(self.leaf is not None):
             print("leaf" , self.leaf,)
 
-def getResult(attributes, tree)
+def getResult(attributes, tree):
     if (tree.op == None):
         return tree.leaf
 
     if (attributes[tree.op] == 0):
         return(getResult(attributes, tree.kids[0]))
-    else
+    else:
         return(getResult(attributes, tree.kids[1]))
 
 
 def testTrees(T, x2):
 
-    predictions = np.zeros(x2.size, 6)
+    predictions = np.zeros((len(x2), 6))
     predicted = []
 
 
-    for i in range(x2.size):
+    for i in range(len(x2)):
         for j in range(len(T)):
             predicted.append(getResult(x2[i]), T[j])
-        predictions[i] = predicted
+        predictions[i] = list(predicted)
+        predicted.clear()
 
     return np.asarray(predictions)
 
