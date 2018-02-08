@@ -25,6 +25,12 @@
 
 \section{Introduction}
 
+This report details the implementation of a decision tree for classification of facial expressions into the six basic emotions (anger, disgust, fear happiness, sadness and surprise). Facial expressions are characterised by 45 facial action units (AUs) each of which are either activated or not.
+
+Six decision trees were constructed; one for each emotion.
+
+At each stage of construction of the decision tree, the facial action unit which gives the greatest information gain in classifying the examples is chosen to represent a node. The tree therefore represents a disjunction of conjunctions of facial action units which determine whether the facial expression represents the emotion.
+
 \section{Implementation}
 
 \section{Diagrams of the Decision Trees}
