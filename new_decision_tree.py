@@ -360,12 +360,11 @@ def matrix2array(matrix):
 
 def confusionMatrix(T, x2, binary_targets, no_of_classes):
     """Generates and outputs a confusion matrix"""
-    # Element in Column is True event
-    # Element in Row is Prediction
+
     confusion_matrix = np.zeros((no_of_classes,no_of_classes))
 
-    prediction_matrix = testTrees(T, x2)
-    prediction_array = matrix2array(prediction_matrix)
+    prediction_array = testTrees(T, x2)
+
     for i in range(no_of_classes):
         for j in range(no_of_classes):
             for k in range(len(binary_targets)):
@@ -425,6 +424,21 @@ def classificationRate(T, x2, binary_targets, class_number):
     total_true = true_positives + true_negatives
     total = total_true + false_positives + false_negatives
     return float(total_true) / total
+    
+def trainTrees(number_of_trees, attribute_values, classifications, split_value):
+    """returns a list of length number_of_trees trained with attribute_values and classifications split 10-fold at location split_value"""
+    trees = []
+    for i in range(1, number_of_trees + 1):
+        example = chooseEmotion(classifications, i)
+        attr_header = []
+        data_merge = merge(attribute_values, example)
+        (test_data, training_data) = split10Fold(attribute_values, split_value)
+        (binary_test, binary_training) = split10Fold(example, split_value)
+        for j in range(len(data_merge[0])):
+            attr_header.append(j)
+        x = decisionTree(training_data, attr_header, binary_training)
+        trees.append(x)
+    return trees
 
 
 #data = scipy.io.loadmat("Data/cleandata_students.mat")
