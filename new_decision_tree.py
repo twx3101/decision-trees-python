@@ -445,55 +445,17 @@ def f1(precision, recall):
         return 0
     return (2 * float((precision * recall))/(precision + recall))
 
-def classificationRate2(confusion_matrix, class_number):
+def classificationRate(confusion_matrix, no_of_classes):
     """calculates and return the classification rate for one class."""
-
-    true_positives = confusion_matrix[class_number - 1][class_number - 1]
-
-    false_positives = 0
-    for i in confusion_matrix[class_number - 1]:
-        false_positives += i
-    false_positives -= true_positives
-
-    false_negatives = 0
-    for i in range(len(confusion_matrix)):
-        false_negatives += confusion_matrix[i][class_number - 1]
-    false_negatives -= true_positives
-
-    true_negatives = 0
+    total = 0
     for row in confusion_matrix:
         for cell in row:
-            true_negatives += cell
-    true_negatives -= true_positives
-    true_negatives -= false_positives
-    true_positives -= false_negatives
-
-    total_true = true_positives + true_negatives
-    total = total_true + falsgetResulte_positives + false_negatives
-    return float(total_true) / total
-
-def classificationRate(T, x2, binary_targets, class_number):
-    """calculates and return the classification rate for one class."""
-    true_positives = 0
-    false_positives = 0
-    true_negatives = 0
-    false_negatives = 0
-
-    prediction_matrix = testTrees(T, x2)
-    for i in range(len(binary_targets)):
-        if prediction_matrix[i][class_number - 1] == 1:
-            if binary_targets[i] == class_number:
-                true_positives += 1
-            else:
-                false_positives += 1
-        else:
-            if binary_targets[i] == class_number:
-                false_negatives += 1
-            else:
-                true_negatives += 1
-
-    total_true = true_positives + true_negatives
-    total = total_true + false_positives + false_negatives
+            total += cell
+    total_true
+    i = 0
+    while i < no_of_classes:
+        total_true += confusion_matrix[i][i]
+        i += 1
     return float(total_true) / total
     
 def trainTrees(number_of_trees, attribute_values, classifications, split_value):
