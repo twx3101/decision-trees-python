@@ -254,6 +254,37 @@ def testTrees(T, x2):
         predicted.clear()
 
     return np.asarray(predictions)
+    
+#def testTrees(T, x2):
+#    """Tests all trees with features x2, gives random classification when there are multiple classifications for an example or zero classifications for an example"""
+
+#    predictions = np.zeros((len(x2), 6))
+#    predicted = []
+#
+#    for i in range(len(x2)):
+#        for j in range(len(T)):
+#            predicted.append(getResult(x2[i]), T[j])
+#        predictions[i] = list(predicted)
+#        predicted.clear()
+#
+#    classes = randomClassify(np.asarray(predicitions), len(T))
+#    return classes
+
+def randomClassify(predictions, classes):
+    """randomly chooses one column containing a 1 from each row and returns a column vector of the indices of the column that was chosen +1"""
+    return_vector = np.zeros( (len(predictions), 1), dtype=np.int16)
+    for i in range(len(predictions)):
+        list = []
+        for j in range(len(predictions[i])):
+            if predictions[i][j] == 1:
+                list.append(j+1)
+        if len(list) == 0:
+            return_vector[i] = random.randint(1,classes)
+        elif len(list) == 1:
+            return_vector[i] = list[0]
+        else:
+            return_vector[i] = random.choice(list)
+    return return_vector
 
 
 def split10Fold(data, time):
