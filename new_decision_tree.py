@@ -346,17 +346,17 @@ def split10Fold(data, time):
             nine_folds_data.append(data[i])
     return np.asarray(one_fold_data), np.asanyarray(nine_folds_data)
 
-def matrix2array(matrix):
-    """takes a matrix of 1s and zeros and outputs an array containing the indexof the column that contains a 1"""
-    matrix_shape = matrix.shape
-    no_of_rows = matrix_shape[0]
-    return_array = np.zeros((no_of_rows,1))
+#def matrix2array(matrix):
+#    """takes a matrix of 1s and zeros and outputs an array containing the indexof the column that contains a 1"""
+#    matrix_shape = matrix.shape
+#    no_of_rows = matrix_shape[0]
+#    return_array = np.zeros((no_of_rows,1))
 
-    for index,row in enumerate(matrix):
-        for i in range(len(row)):
-            if row[i] == 1:
-                return_array[index] = i + 1
-    return return_array
+#    for index,row in enumerate(matrix):
+#        for i in range(len(row)):
+#            if row[i] == 1:
+#                return_array[index] = i + 1
+#    return return_array
 
 def confusionMatrix(T, x2, binary_targets, no_of_classes):
     """Generates and outputs a confusion matrix"""
