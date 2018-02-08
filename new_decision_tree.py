@@ -3,6 +3,7 @@ import numpy as np
 #np.set_printoptions(threshold=np.inf)
 import math
 import random
+from graphviz import Digraph
 
 INDEX_LAST_ELEMENT = -1
 
@@ -220,16 +221,45 @@ class tree:
         """add leaf to the tree"""
         self.leaf = value
 
-    def printtree(self):
+    def printtree(self, dot, name):
         """print the tree as plain text"""
+        #if(self.op is not None):
+        #    for i in range(len(self.kids)):
+         #       print("Root", self.op, i,)
+         #       if(self.kids[i]) is not None:
+        #            (self.kids[i].printtree())
+        #elif(self.leaf is not None):
+         #   print("leaf" , self.leaf,)
+        
         if(self.op is not None):
+            dot.node(name, self.name)
             for i in range(len(self.kids)):
-                print("Root", self.op, i,)
-                if(self.kids[i]) is not None:
-                    (self.kids[i].printtree())
-        elif(self.leaf is not None):
-            print("leaf" , self.leaf,)
-
+                if((self.kids[i].op) is not None):
+                    num = str(i)
+                    conc = name + self.kids[i].name + num
+                    dot.node(conc, self.kids[i].name)
+                    if(i == 0):
+                        dot.edge(name, conc, constraint='true', label="N")
+                    else:
+                        dot.edge(name, conc, constraint='true', label="Y")
+                    self.kids[i].printtree(dot, conc)
+                else:
+                    num = str(i)
+                    conc = name + self.kids[i].name + num
+                    if self.kids[i].leaf == 0:
+                        dot.node(conc, "No", shape="box", color="red")
+                        if(i == 0):
+                            dot.edge(name, conc, constraint='true', label="N")
+                        else:
+                            dot.edge(name, conc, constraint='true', label="Y")
+                    else:
+                        dot.node(conc, "Yes", shape="box", color="green")
+                        if(i == 0):
+                            dot.edge(name, conc, constraint='true', label="N")
+                        else:
+                            dot.edge(name, conc, constraint='true', label="Y")
+        else:
+            return
 def getResult( attributes, tree, recursion):
     if (tree.op == None):
         return tree.leaf, recursion
@@ -498,6 +528,9 @@ for time in range(10):
         result += classi_rate_1
 print(result/60)
 
+# dot = Digraph(comment = "Decision Tree 1")
+# x.printtree(dot, x.name)
+# dot.render('pic/round-table.gv', view=True)
 
 # tree_array_1.append(decisionTree(training_data,attr_header,binary_training_1))
 # tree_array_2.append(decisionTree(training_data,attr_header,binary_training_2))
