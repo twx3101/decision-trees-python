@@ -249,7 +249,7 @@ def testTrees(T, x2):
 
     for i in range(len(x2)):
         for j in range(len(T)):
-            predicted.append(getResult(x2[i]), T[j])
+            predicted.append(getResult(x2[i], T[j])
         predictions[i] = list(predicted)
         predicted.clear()
 
