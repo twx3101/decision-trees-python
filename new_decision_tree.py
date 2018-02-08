@@ -7,6 +7,7 @@ INDEX_LAST_ELEMENT = -1
 
 
 def chooseEmotion(example, emotion):
+    """Returns array of 1s and 0s for emotion"""
     result_array =  []
     for element in example:
         if element == emotion:
@@ -16,6 +17,7 @@ def chooseEmotion(example, emotion):
     return np.asarray(result_array)
 
 def count(column, target):
+    """Returns number of items in column equal to target"""
     count = 0
     if column.size == 0:
         return 0
@@ -24,8 +26,8 @@ def count(column, target):
             count += 1
     return count
 
-# combine 2 arrays together by attaching input array with emotion example
 def merge(all_data, example):
+    """Combines two arrays into one matrix"""
     i = 0
     complete_array = []
     for row in all_data:
@@ -35,6 +37,7 @@ def merge(all_data, example):
     return np.asarray(complete_array)
 
 def entropy(binary_targets):
+    """Returns the entropy of binary_targets"""
     num_one = count(binary_targets,1)
     num_zero = count(binary_targets,0)
     summation = num_one + num_zero
@@ -49,9 +52,11 @@ def entropy(binary_targets):
         return (-1*(left_side)*math.log(left_side,2))-((right_side)*math.log(right_side,2))
 
 def gain(data_merge,col_attribute,binary_targets):
+    """Returns the information gain of data_merge for col_attribute"""
     return entropy(binary_targets)-remainder(data_merge,col_attribute,binary_targets)
 
 def remainder(data_merge,col_attribute,binary_targets):
+    """Returns the remainder od data_merge for col_attribute"""
     left_array = []
     right_array = []
     binary_left = []
@@ -92,6 +97,7 @@ def remainder(data_merge,col_attribute,binary_targets):
     return  (p0_n0/number_parent)*left_entropy + (p1_n1/number_parent)*right_entropy
 
 def chooseBestAttr(data_merge,attr_header,binary_targets):
+    """Returns the best attribute from data_merge and removes it from the list attr_header"""
     col_best_attr = 0
     max_gain = 0
 
@@ -112,6 +118,7 @@ def chooseBestAttr(data_merge,attr_header,binary_targets):
 
 
 def majorityValue(binary_targets):
+    """Returns the majority value of binary_targets"""
     p = count(binary_targets, 1)
     n = count(binary_targets, 0)
 
@@ -120,16 +127,18 @@ def majorityValue(binary_targets):
     else:
         return 0
 
-# check whether emotion value in emotion example has ALL same value or not
+
 def hasSameValueEmotion(data_merge):
+    """returns True if all emotion examples have same emotion value"""
     first_item = data_merge[0]
     for row in data_merge:
         if row != first_item:
             return False
     return True
 
-# get element in attr column
+
 def getType(data_merge,col_best_attr):
+    """get element in attr column"""
     array_element = []
     for row in data_merge:
         if row[col_best_attr] not in array_element:
@@ -138,6 +147,7 @@ def getType(data_merge,col_best_attr):
 
 
 def getDataSample(data_merge, col_best_attr, binary_targets, val):
+    """Needs explanation"""
     array_row = []
     binary_row = []
     for index, row in enumerate(data_merge):
@@ -146,8 +156,9 @@ def getDataSample(data_merge, col_best_attr, binary_targets, val):
             binary_row.append(binary_targets[index])
     return np.asarray(array_row), np.asarray(binary_row)
 
-#check whether sample has same value or not
+
 def isSameSample(data_merge):
+    """Returns true if sample has same value"""
     temp_data_merge = np.copy(data_merge[0])
     i = 0
     for row in data_merge:
@@ -159,6 +170,7 @@ def isSameSample(data_merge):
     return True
 
 def decisionTree(examples, attributes, binary_targets):
+    """Returns a decision tree for examples, with a list of attributes and binary_targets"""
     x = tree()
     if isSameSample(examples):
         x.addLeaf(majorityValue(binary_targets))
@@ -189,13 +201,14 @@ def decisionTree(examples, attributes, binary_targets):
     return x
 
 class tree:
+    """"""
     def __init__(self):
         self.op = None #attribute number for root
         self.kids = [] #subtreees
         self.leaf = None #value is 1 or 0 if leaf node, otherwise None
 
     def addRoot(self, attribute):
-        #add root node to tree, empty for leaf node
+        """add root node to tree, empty for leaf node"""
         self.op = attribute
 
     def addKids(self, kid):
@@ -203,9 +216,11 @@ class tree:
         self.kids.append(kid)
 
     def addLeaf(self, value):
+        """add leaf to the tree"""
         self.leaf = value
 
     def printtree(self):
+        """print the tree as plain text"""
         if(self.op is not None):
             for i in range(len(self.kids)):
                 print("Root", self.op, i,)
@@ -215,6 +230,7 @@ class tree:
             print("leaf" , self.leaf,)
 
 def getResult(attributes, tree):
+    """returns the predicted result of the attributes when passed through tree"""
     if (tree.op == None):
         return tree.leaf
 
@@ -225,6 +241,7 @@ def getResult(attributes, tree):
 
 
 def testTrees(T, x2):
+    """Tests all trees with features x2"""
 
     predictions = np.zeros((len(x2), 6))
     predicted = []
@@ -240,6 +257,7 @@ def testTrees(T, x2):
 
 
 def split10Fold(data, time):
+    """splits data 10 fold"""
     one_fold_data = []
     nine_folds_data = []
 
