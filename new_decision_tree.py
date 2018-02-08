@@ -413,6 +413,7 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
                     confusion_matrix[i][j] += 1
 
     return confusion_matrix
+    
 
 def averageRecall(confusion_matrix, class_number):
     """returns average recall for the class"""
@@ -443,6 +444,33 @@ def f1(precision, recall):
     if precision == 0 and recall == 0:
         return 0
     return (2 * float((precision * recall))/(precision + recall))
+
+def classificationRate2(confusion_matrix, class_number):
+    """calculates and return the classification rate for one class."""
+
+    true_positives = confusion_matrix[class_number - 1][class_number - 1]
+
+    false_positives = 0
+    for i in confusion_matrix[class_number - 1]:
+        false_positives += i
+    false_positives -= true_positives
+
+    false_negatives = 0
+    for i in range(len(confusion_matrix)):
+        false_negatives += confusion_matrix[i][class_number - 1]
+    false_negatives -= true_positives
+
+    true_negatives = 0
+    for row in confusion_matrix:
+        for cell in row:
+            true_negatives += cell
+    true_negatives -= true_positives
+    true_negatives -= false_positives
+    true_positives -= false_negatives
+
+    total_true = true_positives + true_negatives
+    total = total_true + falsgetResulte_positives + false_negatives
+    return float(total_true) / total
 
 def classificationRate(T, x2, binary_targets, class_number):
     """calculates and return the classification rate for one class."""
