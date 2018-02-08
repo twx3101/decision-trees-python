@@ -321,7 +321,18 @@ def testTrees(T, x2):
             else:
                 row[temp_index_array2[0]] = 1
 
-    return predictions
+    #return predictions
+    
+    matrix_shape = predictions.shape
+    no_of_rows = matrix_shape[0]
+    return_array = np.zeros((no_of_rows,1))
+
+    for index,row in enumerate(matrix):
+        for i in range(len(row)):
+            if row[i] == 1:
+                return_array[index] = i + 1
+   return return_array
+
 #def testTrees(T, x2):
 #    """Tests all trees with features x2, gives random classification when there are multiple classifications for an example or zero classifications for an example"""
 #    predictions = np.zeros((len(x2), 6))
@@ -403,6 +414,7 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
                     confusion_matrix[i][j] += 1
 
     return confusion_matrix
+    
 
 def averageRecall(confusion_matrix, class_number):
     """returns average recall for the class"""
@@ -434,7 +446,23 @@ def f1(precision, recall):
         return 0
     return (2 * float((precision * recall))/(precision + recall))
 
+<<<<<<< HEAD
 
+=======
+def classificationRate(confusion_matrix, no_of_classes):
+    """calculates and return the classification rate for one class."""
+    total = 0
+    for row in confusion_matrix:
+        for cell in row:
+            total += cell
+    total_true = 0
+    i = 0
+    while i < no_of_classes:
+        total_true += confusion_matrix[i][i]
+        i += 1
+    return float(total_true) / total
+    
+>>>>>>> a1f1fee2e2befaf710c160c3ec00cac092d83352
 def trainTrees(number_of_trees, attribute_values, classifications, split_value):
     """returns a list of length number_of_trees trained with attribute_values and classifications split 10-fold at location split_value"""
     trees = []
