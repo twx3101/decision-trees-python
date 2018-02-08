@@ -230,7 +230,7 @@ class tree:
         #            (self.kids[i].printtree())
         #elif(self.leaf is not None):
          #   print("leaf" , self.leaf,)
-        
+
         if(self.op is not None):
             dot.node(name, self.name)
             for i in range(len(self.kids)):
@@ -270,7 +270,7 @@ def getResult( attributes, tree, recursion):
     else:
         recursion += 1
         return(getResult(attributes, tree.kids[1],recursion))
-        
+
 def testTrees(T, x2):
     predictions = np.zeros((len(x2), 6))
     predicted = []
@@ -336,7 +336,7 @@ def testTrees(T, x2):
 
 #    classes = randomClassify(np.asarray(predictions), len(T))
 #    return classes
-    
+
 def randomClassify(predictions, classes):
     """randomly chooses one column containing a 1 from each row and returns a column vector of the indices of the column that was chosen +1"""
     return_vector = np.zeros( (len(predictions), 1), dtype=np.int16)
@@ -376,24 +376,25 @@ def split10Fold(data, time):
             nine_folds_data.append(data[i])
     return np.asarray(one_fold_data), np.asanyarray(nine_folds_data)
 
-#def matrix2array(matrix):
-#    """takes a matrix of 1s and zeros and outputs an array containing the indexof the column that contains a 1"""
-#    matrix_shape = matrix.shape
-#    no_of_rows = matrix_shape[0]
-#    return_array = np.zeros((no_of_rows,1))
+def matrix2array(matrix):
+   """takes a matrix of 1s and zeros and outputs an array containing the indexof the column that contains a 1"""
+   matrix_shape = matrix.shape
+   no_of_rows = matrix_shape[0]
+   return_array = np.zeros((no_of_rows,1))
 
-#    for index,row in enumerate(matrix):
-#        for i in range(len(row)):
-#            if row[i] == 1:
-#                return_array[index] = i + 1
-#    return return_array
+   for index,row in enumerate(matrix):
+       for i in range(len(row)):
+           if row[i] == 1:
+               return_array[index] = i + 1
+   return return_array
 
 def confusionMatrix(T, x2, binary_targets, no_of_classes):
     """Generates and outputs a confusion matrix"""
 
     confusion_matrix = np.zeros((no_of_classes,no_of_classes))
 
-    prediction_array = testTrees(T, x2)
+    prediction_mat = testTrees(T, x2)
+    prediction_array = matrix2array(prediction_mat)
 
     for i in range(no_of_classes):
         for j in range(no_of_classes):
@@ -405,16 +406,16 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
 
 def averageRecall(confusion_matrix, class_number):
     """returns average recall for the class"""
-    
+
     total_actual = 0
     for row in confusion_matrix:
         total_actual += row[class_number - 1]
 
     true_positives = confusion_matrix[class_number - 1][class_number - 1]
-    
+
     return float(true_positives)/total_actual
-    
-    
+
+
 def precisionRate(confusion_matrix, class_number):
     """returns precision rate for the class"""
     # precision = True Positive/ (True Positive + False Positive)
@@ -429,32 +430,11 @@ def precisionRate(confusion_matrix, class_number):
 
 def f1(precision, recall):
     """calculates and returns the f1 measure using the precision and recall"""
+    if precision == 0 and recall == 0:
+        return 0
     return (2 * float((precision * recall))/(precision + recall))
 
-def classificationRate(T, x2, binary_targets, class_number):
-    """calculates and return the classification rate for one class."""
-    true_positives = 0
-    false_positives = 0
-    true_negatives = 0
-    false_negatives = 0
 
-    prediction_matrix = testTrees(T, x2)
-    for i in range(len(binary_targets)):
-        if prediction_matrix[i][class_number - 1] == 1:
-            if binary_targets[i] == class_number:
-                true_positives += 1
-            else:
-                false_positives += 1
-        else:
-            if binary_targets[i] == class_number:
-                false_negatives += 1
-            else:
-                true_negatives += 1
-
-    total_true = true_positives + true_negatives
-    total = total_true + false_positives + false_negatives
-    return float(total_true) / total
-    
 def trainTrees(number_of_trees, attribute_values, classifications, split_value):
     """returns a list of length number_of_trees trained with attribute_values and classifications split 10-fold at location split_value"""
     trees = []
@@ -471,6 +451,20 @@ def trainTrees(number_of_trees, attribute_values, classifications, split_value):
     return trees
 
 
+def classificationRate2(confusion_matrix, no_of_classes):
+    """calculates and return the classification rate for one class."""
+    total = 0
+    for row in confusion_matrix:
+        for cell in row:
+            total += cell
+    total_true = 0
+    i = 0
+    while i < no_of_classes:
+        total_true += confusion_matrix[i][i]
+        i += 1
+    return float(total_true) / total
+
+
 #data = scipy.io.loadmat("Data/cleandata_students.mat")
 data = scipy.io.loadmat("Data/noisydata_students.mat")
 
@@ -481,7 +475,7 @@ data_y = np.array(data['y'])
 attribute_tracker = []
 for row in range(data_x.shape[1]):
     attribute_tracker.append(1)
-
+#
 example_1 = chooseEmotion(data_y,1)
 data_merge1 = merge(data_x, example_1)
 
@@ -496,7 +490,14 @@ for i in range(6):
 attr_header = []
 for i in range(len(data_merge1[0])):
     attr_header.append(i)
-
+#
+for i in range(1,11):
+    decision = trainTrees(6, data_x, data_y, i)
+    (test_data, training_data) = split10Fold(data_x, i)
+    (binary_test, binary_training) = split10Fold(data_y, i)
+    x = confusionMatrix(decision, test_data, binary_test, 6)
+    total =0.0
+    print(classificationRate2(x, 6))
 
 #binary_test = np.array([])
 # (binary_test_1, binary_training_1) = split10Fold(example_1, 3)
@@ -505,28 +506,28 @@ for i in range(len(data_merge1[0])):
 # (binary_test_4, binary_training_4) = split10Fold(example_4, 3)
 # (binary_test_5, binary_training_5) = split10Fold(example_5, 3)
 # (binary_test_6, binary_training_6) = split10Fold(example_6, 3)
-tree_array_1 = []
-(test_data, training_data) = split10Fold(data_x, 3)
-(binary_test, binary_training) = split10Fold(data_y, 3)
-for i in range(6):
-    (binary_test_1, binary_training_1) = split10Fold(binary[i], 3)
-    tree_array_1.append(decisionTree(training_data,attr_header,binary_training_1))
-
-confusion = confusionMatrix(tree_array_1, test_data, binary_test, 6)
-#print(confusion)
-
-result = 0.0
-for time in range(10):
-    (test_data, training_data) = split10Fold(data_x, time+1)
-    tree_array_1 = []
-    for i in range(6):
-        (binary_test_1, binary_training_1) = split10Fold(binary[i], time+1)
-        tree_array_1.append(decisionTree(training_data,attr_header,binary_training_1))
-    for target in range(6):
-        (binary_test_1, binary_training_1) = split10Fold(binary[target], time+1)
-        classi_rate_1 = classificationRate(tree_array_1,test_data,binary_test_1,target+1)
-        result += classi_rate_1
-print(result/60)
+# tree_array_1 = []
+# (test_data, training_data) = split10Fold(data_x, 3)
+# (binary_test, binary_training) = split10Fold(data_y, 3)
+# for i in range(6):
+#     (binary_test_1, binary_training_1) = split10Fold(binary[i], 3)
+#     tree_array_1.append(decisionTree(training_data,attr_header,binary_training_1))
+#
+# confusion = confusionMatrix(tree_array_1, test_data, binary_test, 6)
+# #print(confusion)
+#
+# result = 0.0
+# for time in range(10):
+#     (test_data, training_data) = split10Fold(data_x, time+1)
+#     tree_array_1 = []
+#     for i in range(6):
+#         (binary_test_1, binary_training_1) = split10Fold(binary[i], time+1)
+#         tree_array_1.append(decisionTree(training_data,attr_header,binary_training_1))
+#     for target in range(6):
+#         (binary_test_1, binary_training_1) = split10Fold(binary[target], time+1)
+#         classi_rate_1 = classificationRate(tree_array_1,test_data,binary_test_1,target+1)
+#         result += classi_rate_1
+# print(result/60)
 
 # dot = Digraph(comment = "Decision Tree 1")
 # x.printtree(dot, x.name)
@@ -567,4 +568,3 @@ print(result/60)
 # classi_rate = classificationRate(tree_array,training_data,binary_training,1)
 # classi_rate = classificationRate(tree_array,data_x,data_y,1)
 #print(classi_rate)
-
