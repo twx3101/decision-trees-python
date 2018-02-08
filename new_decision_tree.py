@@ -240,36 +240,21 @@ def getResult(attributes, tree):
         return(getResult(attributes, tree.kids[1]))
 
 
-def testTrees(T, x2):
-    """Tests all trees with features x2"""
-
-    predictions = np.zeros((len(x2), 6))
-    predicted = []
-
-
-    for i in range(len(x2)):
-        for j in range(len(T)):
-            predicted.append(getResult(x2[i], T[j])
-        predictions[i] = list(predicted)
-        predicted.clear()
-
-    return np.asarray(predictions)
-    
 #def testTrees(T, x2):
 #    """Tests all trees with features x2, gives random classification when there are multiple classifications for an example or zero classifications for an example"""
-
 #    predictions = np.zeros((len(x2), 6))
 #    predicted = []
-#
+
 #    for i in range(len(x2)):
 #        for j in range(len(T)):
-#            predicted.append(getResult(x2[i]), T[j])
-#        predictions[i] = list(predicted)
-#        predicted.clear()
-#
-#    classes = randomClassify(np.asarray(predicitions), len(T))
-#    return classes
+#            #predicted.append(getResult(x2[i], T[j])
+#            predictions[i][j] = getResult(x2[i], T[j])
+#        #predictions[i] = list(predicted)
+#        #predicted.clear()
 
+#    classes = randomClassify(np.asarray(predictions), len(T))
+#    return classes
+    
 def randomClassify(predictions, classes):
     """randomly chooses one column containing a 1 from each row and returns a column vector of the indices of the column that was chosen +1"""
     return_vector = np.zeros( (len(predictions), 1), dtype=np.int16)
