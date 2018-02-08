@@ -451,7 +451,7 @@ def classificationRate(confusion_matrix, no_of_classes):
     for row in confusion_matrix:
         for cell in row:
             total += cell
-    total_true
+    total_true = 0
     i = 0
     while i < no_of_classes:
         total_true += confusion_matrix[i][i]
