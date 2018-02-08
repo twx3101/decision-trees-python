@@ -440,6 +440,8 @@ def precisionRate(confusion_matrix, class_number):
 
 def f1(precision, recall):
     """calculates and returns the f1 measure using the precision and recall"""
+    if precision == 0 and recall == 0:
+        return 0
     return (2 * float((precision * recall))/(precision + recall))
 
 def classificationRate(T, x2, binary_targets, class_number):
