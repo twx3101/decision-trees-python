@@ -1,0 +1,46 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{mathtools}
+\usepackage{graphicx}
+
+\usepackage[nodayofweek]{datetime}
+\longdate
+
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{\fancyplain{}{Machine Learning Coursework: Decision Trees}}
+\rhead{\fancyplain{}{\today}}
+\cfoot{\fancyplain{}{\thepage}}
+
+
+\title{Machine Learning Coursework: Decision Trees}
+\author{names\\
+       emails\\ \\
+       \small{Course: CO395, Imperial College London}
+}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This report details the implementation of a decision tree for classification of facial expressions into the six basic emotions (anger, disgust, fear happiness, sadness and surprise). Facial expressions are characterised by 45 facial action units (AUs) each of which are either activated or not.
+
+Six decision trees were constructed; one for each emotion.
+
+At each stage of construction of the decision tree, the facial action unit which gives the greatest information gain in classifying the examples is chosen to represent a node. The tree therefore represents a disjunction of conjunctions of facial action units which determine whether the facial expression represents the emotion.
+
+\section{Implementation}
+
+\section{Diagrams of the Decision Trees}
+
+\section{Evaluation Results}
+
+\section{Performance with Noisy and Clean Datasets}
+
+\section{Dealing with Ambiguity}
+
+\section{Pruning}
+
+\end{document}
