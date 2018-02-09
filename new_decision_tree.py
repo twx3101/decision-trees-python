@@ -212,6 +212,8 @@ class tree:
     def addRoot(self, attribute):
         """add root node to tree, empty for leaf node"""
         self.op = attribute
+        num = str(attribute)
+        self.name = num
 
     def addKids(self, kid):
         """add subtrees to the tree"""
@@ -220,6 +222,8 @@ class tree:
     def addLeaf(self, value):
         """add leaf to the tree"""
         self.leaf = value
+        num = str(value)
+        self.name = num
 
     def printtree(self, dot, name):
         """print the tree as plain text"""
