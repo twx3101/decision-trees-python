@@ -519,6 +519,52 @@ def classificationRate2(confusion_matrix, no_of_classes):
         i += 1
     return float(total_true) / total
 
+def crossValidationResults(data_x, data_y, no_of_classes, times):
+    """prints the average classification, a confusion matrix and recall, precision and f1 measure for each class of the trees using 10 fold cross validation the specified number of times"""
+    av_conf = np.zeros((no_of_classes,no_of_classes))
+    av_class = np.zeros((times,1))
+    for j in range(times):
+        conf = np.zeros((no_of_classes,no_of_classes))
+        for i in range(1,times+1):
+            decision = trainTrees(no_of_classes, data_x, data_y, i)
+            (test_data, training_data) = split10Fold(data_x, i)
+            (binary_test, binary_training) = split10Fold(data_y, i)
+            x = confusionMatrix(decision, test_data, binary_test, no_of_classes)
+            conf+=x
+            total =0.0
+            av_class[i-1] += (classificationRate2(x, no_of_classes))
+
+        conf = conf/no_of_classes
+        av_conf += conf
+
+    av_class = av_class/times
+    average_classification = sum(av_class)/len(av_class)
+
+    print("average classification:", average_classification)
+
+    av_conf = av_conf/times
+    print("Confusion matrix:")
+    print(av_conf)
+
+    recalls = []
+    precisions = []
+    f1s = []
+    for i in range(1,no_of_classes+1):
+        recall = averageRecall(av_conf, i)
+        recalls.append(recall)
+        print("recall for class", i, recall)
+        prec = precisionRate(av_conf, i)
+        precisions.append(prec)
+        print("precision rate for class", i, prec)
+        f = f1(prec, recall)
+        f1s.append(f)
+        print("f1 for class", i, f)
+
+    print("average recall", sum(recalls)/len(recalls))
+    print("average precision", sum(precisions)/len(precisions))
+    print("average f1", sum(f1s)/len(f1s))
+
+
 
 #data = scipy.io.loadmat("Data/cleandata_students.mat")
 data = scipy.io.loadmat("Data/noisydata_students.mat")
