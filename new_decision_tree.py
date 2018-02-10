@@ -9,7 +9,7 @@ INDEX_LAST_ELEMENT = -1
 
 
 def chooseEmotion(example, emotion):
-    """Returns array of 1s and 0s for emotion"""
+    """Example contains an array of integers. A binary array is returned with a 1 where the corresponding element is equal to the value of emotion and 0 otherwise."""
     result_array =  []
     for element in example:
         if element == emotion:
@@ -29,7 +29,7 @@ def count(column, target):
     return count
 
 def merge(all_data, example):
-    """Combines two arrays into one matrix"""
+    """Combines two arrays all_data and example into one matrix"""
     i = 0
     complete_array = []
     for row in all_data:
@@ -58,7 +58,7 @@ def gain(data_merge,col_attribute,binary_targets):
     return entropy(binary_targets)-remainder(data_merge,col_attribute,binary_targets)
 
 def remainder(data_merge,col_attribute,binary_targets):
-    """Returns the remainder od data_merge for col_attribute"""
+    """Returns the remainder of data_merge for col_attribute"""
     left_array = []
     right_array = []
     binary_left = []
@@ -172,7 +172,10 @@ def isSameSample(data_merge):
     return True
 
 def decisionTree(examples, attributes, binary_targets):
-    """Returns a decision tree for examples, with a list of attributes and binary_targets"""
+    """Returns a decision tree for examples, with a list of attributes and binary_targets
+    examples is the training data, a matrix of 1s and 0s
+    attributes is a list of the attribute headers for each column of the examples matrix
+    binary_targets is an array of 1s and 0s, the correct classification for each example."""
     x = tree()
     if isSameSample(examples):
         x.addLeaf(majorityValue(binary_targets))
@@ -203,7 +206,10 @@ def decisionTree(examples, attributes, binary_targets):
     return x
 
 class tree:
-    """"""
+    """class for the tree data structure.
+    op = attribute number for this node the root of the (sub)tree
+    kids = a list containing the two children of the node, i.e. the root nodes of subtrees. List is empty if this is a leaf node.
+    leaf = if the node is a leaf, contains 1 or 0. Otherwise this attribute is empty"""
     def __init__(self):
         self.op = None #attribute number for root
         self.kids = [] #subtreees
@@ -276,6 +282,11 @@ def getResult( attributes, tree, recursion):
         return(getResult(attributes, tree.kids[1],recursion))
 
 def testTrees(T, x2):
+    """Tests the list of trees T with data x2.
+    Each data item is classified as belonging to an element of T
+    an array of classifications as integers is returned.
+    Ambiguous data points are classified according to the tree with the shortest branch.
+    Code can be altered to use random classification to solve ambiguity."""
     predictions = np.zeros((len(x2), 6))
     predicted = []
     depth_tree = np.ones((len(x2),6))
@@ -288,8 +299,9 @@ def testTrees(T, x2):
     predictions = np.asarray(predictions)
     depth_tree = np.asarray(depth_tree)
 
-    predictions = useDepthMethod(predictions,depth_tree)
-    #predictions = useRandomMethod(predictions)
+    # COMMENT OUT ONE OF THESE METHODS AND LEAVE THE OTHER UNCOMMENTED
+    predictions = useDepthMethod(predictions,depth_tree) # prefer shallow branches
+    #predictions = useRandomMethod(predictions) #random classification
 
     matrix_shape = predictions.shape
     no_of_rows = matrix_shape[0]
@@ -302,7 +314,7 @@ def testTrees(T, x2):
     return return_array
 
 def useDepthMethod(predictions, depth_tree):
-
+    """makes a predicition based on shallow branches"""
     for index,row in enumerate(predictions):
         if row.sum() == 0:
             max_num = 0
@@ -343,6 +355,7 @@ def useDepthMethod(predictions, depth_tree):
     return predictions
 
 def useRandomMethod(predictions):
+    """makes a prediction with a random choice"""
     for index,row in enumerate(predictions):
 
         random_choose = 0
@@ -429,7 +442,7 @@ def split10Fold(data, time):
 #   return return_array
 
 def confusionMatrix(T, x2, binary_targets, no_of_classes):
-    """Generates and outputs a confusion matrix"""
+    """Generates and outputs a confusion matrix for the lists of trees T, data x2, correct classifications, binary_targets and the number of classes no_of_classes."""
 
     confusion_matrix = np.zeros((no_of_classes,no_of_classes))
 
@@ -505,20 +518,6 @@ def trainTrees(number_of_trees, attribute_values, classifications, split_value):
         trees.append(x)
     return trees
 
-
-def classificationRate2(confusion_matrix, no_of_classes):
-    """calculates and return the classification rate for one class."""
-    total = 0
-    for row in confusion_matrix:
-        for cell in row:
-            total += cell
-    total_true = 0
-    i = 0
-    while i < no_of_classes:
-        total_true += confusion_matrix[i][i]
-        i += 1
-    return float(total_true) / total
-
 def crossValidationResults(data_x, data_y, no_of_classes, times):
     """prints the average classification, a confusion matrix and recall, precision and f1 measure for each class of the trees using 10 fold cross validation the specified number of times"""
     av_conf = np.zeros((no_of_classes,no_of_classes))
@@ -532,7 +531,7 @@ def crossValidationResults(data_x, data_y, no_of_classes, times):
             x = confusionMatrix(decision, test_data, binary_test, no_of_classes)
             conf+=x
             total =0.0
-            av_class[i-1] += (classificationRate2(x, no_of_classes))
+            av_class[i-1] += (classificationRate(x, no_of_classes))
 
         conf = conf/no_of_classes
         av_conf += conf
@@ -598,7 +597,7 @@ for i in range(1,11):
     (binary_test, binary_training) = split10Fold(data_y, i)
     x = confusionMatrix(decision, test_data, binary_test, 6)
     total =0.0
-    print(classificationRate2(x, 6))
+    print(classificationRate(x, 6))
     
 ####### Pickle File ###########################################
 
