@@ -130,7 +130,7 @@ def majorityValue(binary_targets):
 
 
 def hasSameValueEmotion(data_merge):
-    """returns True if all emotion examples have same emotion value"""
+    """Returns True if all emotion examples have same emotion value"""
     first_item = data_merge[0]
     for row in data_merge:
         if row != first_item:
@@ -138,17 +138,11 @@ def hasSameValueEmotion(data_merge):
     return True
 
 
-def getType(data_merge,col_best_attr):
-    """get element in attr column"""
-    array_element = []
-    for row in data_merge:
-        if row[col_best_attr] not in array_element:
-            array_element.append(row[col_best_attr])
-    return array_element
-
-
 def getDataSample(data_merge, col_best_attr, binary_targets, val):
-    """Needs explanation"""
+    """ Splitting Method that
+    Returns two arrays that match best_attr value to val(0 or 1): 
+    1.arrays of example
+    2.array of binary_targets"""
     array_row = []
     binary_row = []
     for index, row in enumerate(data_merge):
@@ -263,6 +257,7 @@ class tree:
         else:
             return
 def getResult( attributes, tree, recursion):
+    """ Return depth of trees and value in leaf of tree (1 or 0)""" 
     if (tree.op == None):
         return tree.leaf, recursion
 
