@@ -599,6 +599,24 @@ for i in range(1,11):
     x = confusionMatrix(decision, test_data, binary_test, 6)
     total =0.0
     print(classificationRate2(x, 6))
+    
+####### Pickle File ###########################################
+
+array_tree = []
+for i in range(6):
+    array_tree.append(decisionTree(data_x, attr_header, binary[i]))
+
+# Output to Pickle File
+output = open('decision_tree.pkl','wb')
+pickle.dump(array_tree,output,-1)
+output.close()
+
+# Input, Read and Print Pickle File
+
+pk = open('decision_tree.pkl','rb')
+data1 = pickle.load(pk)
+pprint.pprint(data1)
+pk.close()
 
 #binary_test = np.array([])
 # (binary_test_1, binary_training_1) = split10Fold(example_1, 3)
