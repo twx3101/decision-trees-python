@@ -1,6 +1,5 @@
 import scipy.io
 import numpy as np
-#np.set_printoptions(threshold=np.inf)
 import math
 import random
 from graphviz import Digraph
