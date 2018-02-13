@@ -3,6 +3,7 @@ import numpy as np
 import math
 import random
 from graphviz import Digraph
+import pickle, pprint
 
 INDEX_LAST_ELEMENT = -1
 
