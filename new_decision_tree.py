@@ -141,7 +141,7 @@ def hasSameValueEmotion(data_merge):
 
 def getDataSample(data_merge, col_best_attr, binary_targets, val):
     """ Splitting Method that
-    Returns two arrays that match best_attr value to val(0 or 1): 
+    Returns two arrays that match best_attr value to val(0 or 1):
     1.arrays of example
     2.array of binary_targets"""
     array_row = []
@@ -258,7 +258,7 @@ class tree:
         else:
             return
 def getResult( attributes, tree, recursion):
-    """ Return depth of trees and value in leaf of tree (1 or 0)""" 
+    """ Return depth of trees and value in leaf of tree (1 or 0)"""
     if (tree.op == None):
         return tree.leaf, recursion
 
@@ -420,7 +420,7 @@ def confusionMatrix(T, x2, binary_targets, no_of_classes):
                     confusion_matrix[i][j] += 1
 
     return confusion_matrix
-    
+
 
 def averageRecall(confusion_matrix, class_number):
     """returns average recall for the class"""
@@ -465,7 +465,7 @@ def classificationRate(confusion_matrix, no_of_classes):
         total_true += confusion_matrix[i][i]
         i += 1
     return float(total_true) / total
-    
+
 def trainTrees(number_of_trees, attribute_values, classifications, split_value):
     """returns a list of length number_of_trees trained with attribute_values and classifications split 10-fold at location split_value"""
     trees = []
@@ -528,7 +528,7 @@ def crossValidationResults(data_x, data_y, no_of_classes, times):
 
 
 
-#data = scipy.io.loadmat("Data/cleandata_students.mat")
+############################# LOADING DATA ####################################
 data = scipy.io.loadmat("Data/noisydata_students.mat")
 
 array_data = np.array(data)
@@ -537,45 +537,54 @@ data_y = np.array(data['y'])
 
 attribute_tracker = []
 for row in range(data_x.shape[1]):
-    attribute_tracker.append(1)
+    attribute_tracker.append(row)
 #
-example_1 = chooseEmotion(data_y,1)
-data_merge1 = merge(data_x, example_1)
 
-binary = []
-for i in range(6):
-    example = chooseEmotion(data_y, i+1)
-    binary.append(example)
-# (test_data, training_data) = split10Fold(data_x, 3)
-# (binary_test, binary_training) = split10Fold(example_1, 3)
-
-
-attr_header = []
-for i in range(len(data_merge1[0])):
-    attr_header.append(i)
+######################### TRAINING TREES ######################################
+# binary = []
+# for i in range(6):
+#     example = chooseEmotion(data_y, i+1)
+#     binary.append(example)
 #
-for i in range(1,11):
-    decision = trainTrees(6, data_x, data_y, i)
-    (test_data, training_data) = split10Fold(data_x, i)
-    (binary_test, binary_training) = split10Fold(data_y, i)
-    x = confusionMatrix(decision, test_data, binary_test, 6)
-    total =0.0
-    print(classificationRate(x, 6))
-    
-####### Pickle File ###########################################
+# array_tree = []
+# for i in range(6):
+#     array_tree.append(decisionTree(data_x, attribute_tracker, binary[i]))
+#
+# # Output to Pickle File
+# output = open('decision_tree.pkl','wb')
+# pickle.dump(array_tree,output,-1)
+# output.close()
 
-array_tree = []
-for i in range(6):
-    array_tree.append(decisionTree(data_x, attr_header, binary[i]))
 
-# Output to Pickle File
-output = open('decision_tree.pkl','wb')
-pickle.dump(array_tree,output,-1)
-output.close()
+################## VALIDATION RESULTS ########################################
+# example_1 = chooseEmotion(data_y,1)
+# data_merge1 = merge(data_x, example_1)
+# attr_header = []
+# for i in range(len(data_merge1[0])):
+#     attr_header.append(i)
+# #
+# for i in range(1,11):
+#     decision = trainTrees(6, data_x, data_y, i)
+#     (test_data, training_data) = split10Fold(data_x, i)
+#     (binary_test, binary_training) = split10Fold(data_y, i)
+#     x = confusionMatrix(decision, test_data, binary_test, 6)
+#     total =0.0
+#     print(classificationRate(x, 6))
 
-# Input, Read and Print Pickle File
+#################### PRINTING TREES ###########################################
+#graphviz required
+
+#dot = Digraph(comment = "Decision Tree 1")
+# tree.printtree(dot, tree.name) #x is the tree to be printed
+# dot.render('pic/round-table.gv', view=True) #saves the image in a pdf file
+
+
+####### RUNNING TESTTREES FUNCTION ###########################################
+# Input, Read and Predictor Labels
 
 pk = open('decision_tree.pkl','rb')
-data1 = pickle.load(pk)
-pprint.pprint(data1)
+trees = pickle.load(pk)
+x = testTrees(trees, data_x)
+print(x) #print resulsts
+
 pk.close()
