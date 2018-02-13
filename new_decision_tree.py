@@ -584,7 +584,7 @@ for row in range(data_x.shape[1]):
 
 pk = open('decision_tree.pkl','rb')
 trees = pickle.load(pk)
-x = testTrees(trees, data_x)
-print(x) #print resulsts
+predictiveLabels = testTrees(trees, data_x)
+print(predictiveLabels) #print resulsts
 
 pk.close()
